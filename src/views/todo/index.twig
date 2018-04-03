@@ -1,0 +1,26 @@
+{% extends '../template/template.twig' %}
+{% block content %}
+
+    {% if alert %}
+        <div class="alert alert-{{alert.status}}" role="alert">
+            {{alert.message}}
+        </div>
+    {% endif %}
+
+    <div class="col-md-12 align-items-center p-3 my-3 bg-primary text-white rounded box-shadow">
+        <h6 class="m-0 text-center">All todos</h6>
+    </div>
+    <div class="col-md-12 rounded box-shadow">
+        <div class="list-group">
+            {% for todo in todos %}
+                <a href="{{ "/todos/" ~ todo.id }}" class="list-group-item d-flex justify-content-between align-item-center">
+                    <span class="text-secondary">{{ todo.message }}</span>
+                    <span class=" badge badge-info ">{{ todo.completion }}</span>
+                </a>
+            {% endfor %}
+            <a href="/todos/add" class="list-group-item list-group-item-action align-item-center">
+                <i class="material-icons m-auto">add_circle</i>
+            </a>
+        </div>
+    </div>
+{% endblock %}
