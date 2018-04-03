@@ -42,11 +42,19 @@ app.get('/todos/add', async (req, res, next) => {
     }
 })
 app.get('/todos/:id', async (req, res, next) => {
-    const todo = await Todos.findById(req.params.id);
-    const user = await User.getTodo(todo)
+    const todo = await Todos.findById(req.params.id)
+    req.session.userId = todo.userId
     res.format({
-        html : () => {res.send()},
-        json : () => {res.send({todo: user.todo})}
+        html : () => {res.redirect(todo.id+'/edit')},
+        json : () => {res.send({todo})}
+    })
+})
+app.get('todos/:id/edit', async (req, res, next) => {
+    const todo = await Todos.findById(req.params.id)
+    req.session.userId = todo.userId
+    res.format({
+        html : () => {res.render('todo/update', {todo})},
+        json : () => {res.send({todo})}
     })
 })
 app.delete('/todos/:id', async (req, res, next) => {

@@ -9,14 +9,14 @@ app.post('/register', async (req, res, next) => {
     const username = req.body.username
     const password = req.body.password
     if (password && username){
-        let user = await User.create({username, password}, {include: [Todos]})
+        let user = await User.create({username, password}, {include: [{model: Todos}]})
         req.session.userId = user.id
         res.format({
             html : () => {res.redirect('/todos/list')},
             json : () => {res.send({user})}
         })
     }else {
-        errors.push({message : "Wrong username or password"})
+        
     }
   
 })
@@ -59,7 +59,6 @@ app.post('/login', async(req, res, next) => {
 })
 
 app.get('/logout', (req, res, next) => {
-    req.logOut()
     req.session.destroy()
     res.redirect('/')
 })
