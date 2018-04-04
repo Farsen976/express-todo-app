@@ -50,14 +50,23 @@ app.get('/todos/:id', async (req, res, next) => {
         json : () => {res.send({todo})}
     })
 })
-app.delete('/todos/:id', async (req, res, next) => {
-    await User.removeTodo({
+app.get('/todos/delete/:id', async (req, res, next) => {
+    const todo = await Todos.findById(req.params.id)
+    res.format({
+        html : () => {res.render('todo/delete', {todo})},
+        json : () => {res.send({todo})}
+    })
+})
+app.delete('/todos/delete', async (req, res, next) => {
+    await Todos.destroy({
         where: {
-            id: req.params.id
+            id: req.body.todoId
         }
     })
-
-    res.json({message : 'Element destroy !'})
+    res.format({
+        html : () => {res.redirect('list')},
+        json : () => {res.send({todo})}
+    })
 })
  app.patch('/todos/:id', async (req, res, next) => {
     const todo = await User.getTodo({
@@ -78,12 +87,8 @@ app.delete('/todos/:id', async (req, res, next) => {
     })
 })
 
-app.put('/todos/:id', async (req, res, next) =>{
-   const todo = await User.hasTodo({
-        where:{
-            id: req.params.id
-        }
-    })
+app.put('/todos/update', async (req, res, next) =>{
+   const todo = await Todos.findById(req.body.todoId)
 
     if(todo){
         await todo.updateAttributes({
@@ -92,7 +97,7 @@ app.put('/todos/:id', async (req, res, next) =>{
         })
     }
     res.format({
-        html : () => {res.send('todo')},
+        html : () => {res.redirect('list')},
         json : () => {res.send({todo})}
     })
 })

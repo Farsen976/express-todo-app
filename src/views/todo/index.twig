@@ -17,6 +17,7 @@
                     <span class="text-secondary">{{ todo.message }}</span>
                     <span class=" badge badge-info ">{{ todo.completion }}</span>
                 </a>
+                <a href="{{ "/todos/delete/" ~ todo.id }}" class=""><i class="material-icons m-auto">fa-close</i></a>
             {% endfor %}
             <a href="/todos/add" class="list-group-item list-group-item-action align-item-center">
                 <i class="material-icons m-auto">add_circle</i>

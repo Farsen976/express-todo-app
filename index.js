@@ -3,6 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
+const methodOverride = require('method-override')
 const User = require('./src/models/user')
 const db = require('./db')
 const PORT = process.env.PORT || 8080
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({
 app.use(session({
   secret: 'keyboard cat'
 }))
+app.use(methodOverride('_method'))
 
 app.set('views', path.join(__dirname, 'src/views/'))
 app.set('view engine', 'twig')
