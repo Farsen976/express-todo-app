@@ -4,10 +4,12 @@ const Todos =  require('../models/todo')
 const User = require('../models/user')
 const Errors = require('../exceptions/errors')
 
+const completions = ['In_Progress', 'To_Do', 'DONE']
+
 app.get('/todos/list', async (req, res, next) => {
     if(req.session.userId !== undefined){
         let user = await User.find({where: {id: req.session.userId}, include: [{model: Todos}]})
-        let todos = user.todos;
+        let todos = user.todos
         if(todos){
             res.format({ 
                 html: () => {res.render('todo/index', {todos})},
@@ -26,7 +28,7 @@ app.post('/todos', async (req, res, next) => {
     let user = await User.find({where: {id: req.session.userId}})
     let todo = await Todos.create({message, completion, userId: user.id})
     await user.addTodo(todo)
-    req.session.userId = user.id
+    //req.session.userId = user.id
     res.format({
         html : () => {res.redirect('todos/list')},
         json : () => {res.send({todo})}
@@ -35,25 +37,16 @@ app.post('/todos', async (req, res, next) => {
 })
 app.get('/todos/add', async (req, res, next) => {
     if(req.session.userId){
-        const completion = ['In_Progress', 'To_Do', 'DONE']
+        
         res.format({
-            html : () => {res.render('todo/create', {completion})}
+            html : () => {res.render('todo/create', {completions})}
         })
     }
 })
 app.get('/todos/:id', async (req, res, next) => {
     const todo = await Todos.findById(req.params.id)
-    req.session.userId = todo.userId
     res.format({
-        html : () => {res.redirect(todo.id+'/edit')},
-        json : () => {res.send({todo})}
-    })
-})
-app.get('todos/:id/edit', async (req, res, next) => {
-    const todo = await Todos.findById(req.params.id)
-    req.session.userId = todo.userId
-    res.format({
-        html : () => {res.render('todo/update', {todo})},
+        html : () => {res.render('todo/update', {todo, completions})},
         json : () => {res.send({todo})}
     })
 })
