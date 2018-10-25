@@ -1,19 +1,22 @@
 class HttpError extends Error {
+  type   : string;
+  status?: number;
+  
     toJSON() {
       const stack = process.env.NODE_ENV === 'development' ? this.stack : undefined
       return {
-        type: this.type || 'SERVER_ERROR',
+        type   : this.type || 'SERVER_ERROR',
         message: this.message || 'Server Error',
         stack
       }
     }
   }
   
-  class NotFoundError extends HttpError {
+  class NotFoundError extends HttpError {    
     constructor(message = 'Not found', type = 'NOT_FOUND') {
       super(message)
       this.status = 404
-      this.type = type
+      this.type   = type
     }
   }
   
@@ -21,7 +24,7 @@ class HttpError extends Error {
     constructor(message = 'Bad request', type = 'BAD_REQUEST') {
       super(message)
       this.status = 400
-      this.type = type
+      this.type   = type
     }
   }
   
@@ -29,8 +32,8 @@ class HttpError extends Error {
     constructor(message = 'Server Error', type = 'SERVER_ERROR') {
       super(message)
       this.status = 500
-      this.type = type
+      this.type   = type
     }
   }
 
-  module.exports ={BadRequestError, ServerError, NotFoundError}
+  export {BadRequestError, ServerError, NotFoundError}
